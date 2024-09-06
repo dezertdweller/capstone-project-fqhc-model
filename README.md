@@ -28,5 +28,28 @@ In order to reduce the size of the dataset for this project, I met with Eric Bat
 * *Table 4:* Other patient characteristics including insurance and special populations.
 * *Table 9D:* Revenue generated from patient services.
 
+I imported each of these tables as a seperate dataframe. Each was processed with various cleaning and wrangling steps before consolidating data into one dataframe for visualization, preprocessing and modeling. 
+
 ---
 ## Data Cleaning and Wrangling
+### 1. Cleaning Column Names & Subsetting Data
+Talk about shape and size of each table, created a function to iterate through df dictionary to get details. Used this to subset data further into only critical columns.
+
+Talk about renaming columns so that feature names made sense versus referring to table subsections.
+
+### 2. Missing Values
+The UDS report contains 3 different types of missing values that are Missing Not At Random (MNAR). Tables could have one or more of these MNAR types represented by the data entry options below:
+1. "-" represents no data entry by health center
+2. "--" represents suppressed patient counts between 1-15 to protect patient privacy
+3. "---" represents suppressed health center confidential data
+
+I created a function examine impact of each of these null types in each dataframe including the number of instances of each MNAR type and percent of the data missing in each column. I then dealt with the missing types differently based on the reason they were missing. My strategy was as follows:
+1. For the "-" missing type, I replaced these with '0' since there was no data entry by health center. No entry would mean 0 for that field since it is possible to not have data to enter. For examle, the health center funding table had many instance of '-' for `ph_amount` which would be where an entity reports the amount of public housing health center funding they receive. Most health centers do not receive this subtype of health center funding, so they would leave it blank. The health_center site dataframe had this type of missing value for site geographic details, and I dropped these rows later because it could mean the site was not yet operational.
+2. The "--" missing type was initially replaced with np.nan values. I decided to replace these values with a random number between 1 and 15 since the "--" was to suppress patient counts between 1-15 to protect patient privacy.
+3. The "---" was also replaced with np.nan values. I kept these dataframes separate from the 3 dataframes with the "--" missing types so I could differentiate between the different missing types and impute them approporiately. Details about how I dealt with these missing values will be covered during the preprocessing section.
+
+### 3. Creating Summary Data for Consolidation
+
+
+---
+## Exploratory Data Analysis
