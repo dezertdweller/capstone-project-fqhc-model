@@ -33,9 +33,9 @@ I imported each of these tables as a seperate dataframe. Each was processed with
 ---
 ## Data Cleaning and Wrangling
 ### 1. Cleaning Column Names & Subsetting Data
-Talk about shape and size of each table, created a function to iterate through df dictionary to get details. Used this to subset data further into only critical columns.
+After importing each dataset as a dataframe, I created a function to iterate over a dataframe dictionary to print out the shape of dataframe and the column names. I needed to review these to determine which columns would be relevant based on my meeting with Eric. 
 
-Talk about renaming columns so that feature names made sense versus referring to table subsections.
+The nine tables had over 650 columns combined. Additionally, several column names were exceedingly long. For example, one column was called `Medicare (Inclusive of dually eligible and other Title XVIII beneficiaries)-0-17 years old (a)`. I subsetted each dataframe manually by determining which columns to keep for further analysis. I then renamed columns to keep their details but not be as long. 
 
 ### 2. Missing Values
 The UDS report contains 3 different types of missing values that are Missing Not At Random (MNAR). Tables could have one or more of these MNAR types represented by the data entry options below:
@@ -43,13 +43,20 @@ The UDS report contains 3 different types of missing values that are Missing Not
 2. "--" represents suppressed patient counts between 1-15 to protect patient privacy
 3. "---" represents suppressed health center confidential data
 
-I created a function examine impact of each of these null types in each dataframe including the number of instances of each MNAR type and percent of the data missing in each column. I then dealt with the missing types differently based on the reason they were missing. My strategy was as follows:
+I created a function examine impact of each of these null types in each dataframe including the number of instances of each MNAR type and percent of the data missing in each column. I then dealt with the missing types differently based on the reason they were missing. Below is an example output from the function `find_missing_values()`.
+![finding-missing-values](https://github.com/user-attachments/assets/a4b2b66e-fe0c-4419-8a18-61fc4a3e1007)
+
+My strategy was as follows:
 1. For the "-" missing type, I replaced these with '0' since there was no data entry by health center. No entry would mean 0 for that field since it is possible to not have data to enter. For examle, the health center funding table had many instance of '-' for `ph_amount` which would be where an entity reports the amount of public housing health center funding they receive. Most health centers do not receive this subtype of health center funding, so they would leave it blank. The health_center site dataframe had this type of missing value for site geographic details, and I dropped these rows later because it could mean the site was not yet operational.
 2. The "--" missing type was initially replaced with np.nan values. I decided to replace these values with a random number between 1 and 15 since the "--" was to suppress patient counts between 1-15 to protect patient privacy.
 3. The "---" was also replaced with np.nan values. I kept these dataframes separate from the 3 dataframes with the "--" missing types so I could differentiate between the different missing types and impute them approporiately. Details about how I dealt with these missing values will be covered during the preprocessing section.
 
-### 3. Creating Summary Data for Consolidation
+After dealing with the missing values, I consolidated the initial nine dataframes into 4 dataframes for furhter wrangling.
 
+### 3. Creating Summary Data for Consolidation
+Two dataframes consisted of several rows of data for each health center. The `Service Area` dataframe consisted of nearly 15,000 rows of data and the `Service Sites` dataframe had approximately 97,100 rows of data. I decided to create aggregate information from these tables to add to the main `Health Centers` dataframe which had details about each entity including the target variable `total_hc_funding`. The new summary data that was added to the `Health Centers` dataframe included zip code counts for each entity representing their total service area, the count of health center sites each entity manages, the total weekly hours of operation across sites for each entity, and the count of cities each entity operated in. I then merged this new aggregated dataframe to the `Health Centers` data.
+
+After imputing random numbers raning from 1-15 for the MNAR type "--", I consolidated the `Health Center Ops Finance` dataframe with `Health Centers`. 
 
 ---
 ## Exploratory Data Analysis
