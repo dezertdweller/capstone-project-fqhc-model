@@ -74,6 +74,9 @@ After imputing random numbers raning from 1-15 for the MNAR type "--", I consoli
 **Notebook Link:s**
 * [Exploratory Data Analysis](https://github.com/dezertdweller/capstone-project-fqhc-model/blob/main/notebooks/eda-visualization.ipynb)
 
+shape of resulting df
+
+
 
 ---
 ## Pre-Processing
