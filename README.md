@@ -5,9 +5,15 @@ Federally qualified health centers (FQHCs) are one of the most essential healthc
 
 My aim with this project is to predict the estimated Health Center Program funding a new entity could secure given certain information about their patients, community, and organization structure. Health organizations could use this estimate to determine if it is worth going through the process to become a federally-qualified health center, especially to help offset any costs they incur by providing uncompensated care. 
 
+## TLDR Version
+
+
+## Repo Organization
+
+
 ---
 ## Data
-Currently funded FQHC are required to provide details about their organizations on an annual basis to HRSA through the Uniform Data System (UDS) report. Data is collected through an online portal and goes through several review processes to ensure no data errors are present. I used the most recently published data, which is from calendar year 2022. 
+Currently funded FQHCs are required to provide details about their organizations on an annual basis to HRSA through the Uniform Data System (UDS) report. Data is collected through an online portal and goes through several review processes to ensure no data errors are present. I used the most recently published data, which is from calendar year 2022. 
 
 To view the data source, data reporting requirements and definitions, or other available information about FQHCs, visit this links below:
 
@@ -32,6 +38,10 @@ I imported each of these tables as a seperate dataframe. Each was processed with
 
 ---
 ## Data Cleaning and Wrangling
+**Notebook Links:s**
+* [Data Cleaning](https://github.com/dezertdweller/capstone-project-fqhc-model/blob/main/notebooks/importing-data.ipynb)
+* [Data Wrangling](https://github.com/dezertdweller/capstone-project-fqhc-model/blob/main/notebooks/data-wrangling.ipynb)
+
 ### 1. Cleaning Column Names & Subsetting Data
 After importing each dataset as a dataframe, I created a function to iterate over a dataframe dictionary to print out the shape of dataframe and the column names. I needed to review these to determine which columns would be relevant based on my meeting with Eric. 
 
@@ -44,9 +54,10 @@ The UDS report contains 3 different types of missing values that are Missing Not
 3. "---" represents suppressed health center confidential data
 
 I created a function examine impact of each of these null types in each dataframe including the number of instances of each MNAR type and percent of the data missing in each column. I then dealt with the missing types differently based on the reason they were missing. Below is an example output from the function `find_missing_values()`.
+
 ![finding-missing-values](https://github.com/user-attachments/assets/a4b2b66e-fe0c-4419-8a18-61fc4a3e1007)
 
-My strategy was as follows:
+My strategy for dealing with each missing type was as follows:
 1. For the "-" missing type, I replaced these with '0' since there was no data entry by health center. No entry would mean 0 for that field since it is possible to not have data to enter. For examle, the health center funding table had many instance of '-' for `ph_amount` which would be where an entity reports the amount of public housing health center funding they receive. Most health centers do not receive this subtype of health center funding, so they would leave it blank. The health_center site dataframe had this type of missing value for site geographic details, and I dropped these rows later because it could mean the site was not yet operational.
 2. The "--" missing type was initially replaced with np.nan values. I decided to replace these values with a random number between 1 and 15 since the "--" was to suppress patient counts between 1-15 to protect patient privacy.
 3. The "---" was also replaced with np.nan values. I kept these dataframes separate from the 3 dataframes with the "--" missing types so I could differentiate between the different missing types and impute them approporiately. Details about how I dealt with these missing values will be covered during the preprocessing section.
@@ -60,3 +71,27 @@ After imputing random numbers raning from 1-15 for the MNAR type "--", I consoli
 
 ---
 ## Exploratory Data Analysis
+**Notebook Link:s**
+* [Exploratory Data Analysis](https://github.com/dezertdweller/capstone-project-fqhc-model/blob/main/notebooks/eda-visualization.ipynb)
+
+
+---
+## Pre-Processing
+
+
+---
+## Modeling
+
+
+---
+## Results
+
+
+---
+## Future Improvements
+
+
+---
+## Credits & Thanks 🤗
+
+
