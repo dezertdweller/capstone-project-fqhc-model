@@ -5,7 +5,7 @@ Federally qualified health centers (FQHCs) are one of the most essential healthc
 
 My aim with this project is to predict the estimated Health Center Program funding a new entity could secure given certain information about their patients, community, and organization structure. Health organizations could use this estimate to determine if it is worth going through the process to become a federally-qualified health center, especially to help offset any costs they incur by providing uncompensated care. 
 
-## TLDR Version
+## High Level Overview of Results
 
 
 ## Repo Organization
@@ -45,7 +45,7 @@ I imported each of these tables as a seperate dataframe. Each was processed with
 ### 1. Cleaning Column Names & Subsetting Data
 After importing each dataset as a dataframe, I created a function to iterate over a dataframe dictionary to print out the shape of dataframe and the column names. I needed to review these to determine which columns would be relevant based on my meeting with Eric. 
 
-The nine tables had over 650 columns combined. Additionally, several column names were exceedingly long. For example, one column was called `Medicare (Inclusive of dually eligible and other Title XVIII beneficiaries)-0-17 years old (a)`. I subsetted each dataframe manually by determining which columns to keep for further analysis. I then renamed columns to keep their details but not be as long. 
+The nine tables had over 650 columns combined. Additionally, several column names were exceedingly long. For example, one column was called `Medicare (Inclusive of dually eligible and other Title XVIII beneficiaries)-0-17 years old (a)` and I renamed it `Medicare 0-17`. I subsetted each dataframe manually by determining which columns to keep for further analysis. I then renamed columns to keep their details but not be as long. 
 
 ### 2. Missing Values
 The UDS report contains 3 different types of missing values that are Missing Not At Random (MNAR). Tables could have one or more of these MNAR types represented by the data entry options below:
@@ -71,12 +71,22 @@ After imputing random numbers raning from 1-15 for the MNAR type "--", I consoli
 
 ---
 ## Exploratory Data Analysis
-**Notebook Link:s**
+**Notebook Link:**
 * [Exploratory Data Analysis](https://github.com/dezertdweller/capstone-project-fqhc-model/blob/main/notebooks/eda-visualization.ipynb)
 
-shape of resulting df
+During EDA, my primary goal was to look at the distribution of the target variable, `total_hc_funding` and how it interacted with other features. The target variable has a wide distribution, ranging from $275,778 to  $22,382,349. Most health centers between receive 1.8M and 4.6M of health center funding annually, with the mean funding level just over 3.6 million.  These esepcially large outliers were not due to errors, some entities do in fact receive nearly 80x the amount of funding as other entities. There are similar distributions with the total number of patients served.  
 
+![hcp-funding-distribution](/Users/katialopes-gilbert/repos/capstone-project-fqhc-model/assets/hcp-funding-distribution.png)
 
+Total patients has a strong positive correlation with total HCP funding, demonstrated with the Pearson's correlation coefficient of 0.730.
+
+I wanted to test several hypotheses with how different features affect funding. 
+
+**Rural vs. Urban**: Urban providers represent 58.7% of the total number of entities and they receive 64.1% of the total available health center funding. Rural providers represent 41.3% of the total number of providers and receive 35.9% of the funding. *Do urban providers receive more funding than rural providers after controlling for patient volume?* I conducted an ANCOVA statistical test to isolate the effect of the categorical variable (Urban or Rural) on the dependent variable (total health center funding). I want to control for patient volume because the total number of patients is highly correlated with the total health center funding. After controlling for patient counts, there is not a statistically significant difference in the total health center funding Urban providers receive compared to Rural providers. 
+
+**Other Non-patient Revenue**:
+
+**SDOH Proportions**:
 
 ---
 ## Pre-Processing
