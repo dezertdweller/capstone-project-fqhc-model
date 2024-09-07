@@ -82,9 +82,17 @@ Total patients has a strong positive correlation with total HCP funding, demonst
 
 I wanted to test several hypotheses with how different features affect funding. 
 
-**Rural vs. Urban**: Urban providers represent 58.7% of the total number of entities and they receive 64.1% of the total available health center funding. Rural providers represent 41.3% of the total number of providers and receive 35.9% of the funding. *Do urban providers receive more funding than rural providers after controlling for patient volume?* I conducted an ANCOVA statistical test to isolate the effect of the categorical variable (Urban or Rural) on the dependent variable (total health center funding). I want to control for patient volume because the total number of patients is highly correlated with the total health center funding. After controlling for patient counts, there is not a statistically significant difference in the total health center funding Urban providers receive compared to Rural providers. 
+**Rural vs. Urban**: Urban providers represent 58.7% of the total number of entities and they receive 64.1% of the total available health center funding. Rural providers represent 41.3% of the total number of providers and receive 35.9% of the funding. 
+
+*Do urban providers receive more funding than rural providers after controlling for patient volume?* I conducted an ANCOVA statistical test to isolate the effect of the categorical variable (Urban or Rural) on the dependent variable (total health center funding). I want to control for patient volume because the total number of patients is highly correlated with the total health center funding. After controlling for patient counts, there is not a statistically significant difference in the total health center funding Urban providers receive compared to Rural providers. 
 
 **Other Non-patient Revenue**:
+The larger health centers become, the more diversified their revenue streams appear. As some health centers increase in patient size, they seem to be more likely to have larger amounts of funding coming from other non-patient and non-grant revenue streams. However, we did see in the table earlier that this is not always the case. Some health centers that have massive amounts of total other revenue, like East Boston Neighborhood Health Center only serve a small number of patients, just over 80,000 in their case. 
+
+*Do health centers with more total other revenue receive more HCP funding compared to health centers with less other revenue?* I conducted an ANCOVA statistical test and controlled for patient size. I also conducted a Logit Regression test to compare HCP funding between entities broken up into 4 quantiles. Both tests demonstrate that health centers that have higher other non-patient non-grant revenue have more total HCP funding. Of note however is that other revenue only explains 6% of the variance in HCP funding.
+
+![other-rev-categry](/Users/katialopes-gilbert/repos/capstone-project-fqhc-model/assets/other-rev-category.png)
+
 
 **SDOH Proportions**:
 
@@ -102,7 +110,8 @@ I wanted to test several hypotheses with how different features affect funding.
 
 ---
 ## Future Improvements
-
+Including other details about entities (type (gov, hospital, nonprofit), region, distance to US-Mex border, )
+Including state-level data (% uninusred, total population, % low-income)
 
 ---
 ## Credits & Thanks 🤗
