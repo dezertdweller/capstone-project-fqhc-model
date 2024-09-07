@@ -76,7 +76,7 @@ After imputing random numbers raning from 1-15 for the MNAR type "--", I consoli
 
 During EDA, my primary goal was to look at the distribution of the target variable, `total_hc_funding` and how it interacted with other features. The target variable has a wide distribution, ranging from $275,778 to  $22,382,349. Most health centers between receive 1.8M and 4.6M of health center funding annually, with the mean funding level just over 3.6 million.  These esepcially large outliers were not due to errors, some entities do in fact receive nearly 80x the amount of funding as other entities. There are similar distributions with the total number of patients served.  
 
-![hcp-funding-distribution](/Users/katialopes-gilbert/repos/capstone-project-fqhc-model/assets/hcp-funding-distribution.png)
+![hcp-funding-distribution](https://github.com/dezertdweller/capstone-project-fqhc-model/blob/main/assets/hcp-funding-distribution.png)
 
 Total patients has a strong positive correlation with total HCP funding, demonstrated with the Pearson's correlation coefficient of 0.730.
 
@@ -91,7 +91,7 @@ The larger health centers become, the more diversified their revenue streams app
 
 *Do health centers with more total other revenue receive more HCP funding compared to health centers with less other revenue?* I conducted an ANCOVA statistical test and controlled for patient size. I also conducted a Logit Regression test to compare HCP funding between entities broken up into 4 quantiles. Both tests demonstrate that health centers that have higher other non-patient non-grant revenue have more total HCP funding. Of note however is that other revenue only explains 6% of the variance in HCP funding.
 
-![other-rev-categry](/Users/katialopes-gilbert/repos/capstone-project-fqhc-model/assets/other-rev-category.png)
+![other-rev-categry](https://github.com/dezertdweller/capstone-project-fqhc-model/blob/main/assets/other-rev-category.png)
 
 
 **SDOH Proportions**:
