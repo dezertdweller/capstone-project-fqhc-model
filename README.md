@@ -239,15 +239,13 @@ Of the test set predictions, 50% were off by 800,000 or less. The average absolu
 ![residuals-distribution](https://github.com/dezertdweller/capstone-project-fqhc-model/blob/main/assets/residuals-distribution.png)
 
 ---
-## Concluding Thoughts
-
-
----
 ## Future Improvements
 
 **State-Level Data**: I joined the residuals data with the original test data. I then grouped the results by state. Different states show different levels of prediction accuracy. For example, states like FL and GA show very high mean residuals and a broad standard deviation, suggesting potential model inconsistencies or unique state-related factors not captured by the model.
 
 Some states like MS have relatively lower mean residuals, which could be due to more consistent data, fewer outliers, or features that align well with the model’s strengths. In contrast, states like RI and TN show very high residuals, which might be worth investigating for data anomalies or specific regional characteristics affecting funding. States with the highest residuals or greatest variability might benefit from a more in-depth, state-specific analysis to tailor the model or address unique local factors. 
+
+Also, not all states were represented in the test data or the training data. Ensuring representative proportions in each split may improve future model performance. 
 
 A level of complexity not currently captures are state-related factors. For example future iterations of this project could include state-level demographic and fiscal data. For example, including things like the state uninsured rate, population, low income, and diversity as well as the amount of Medicaid/Medicare funding could further segment data into groups. 
 
