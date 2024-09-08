@@ -9,6 +9,7 @@ My aim with this project is to predict the estimated Health Center Program fundi
 This project presents the culmination of an extensive data analysis and modeling project focused on predicting total health center funding based on various operational and demographic factors. The best-performing model, a Random Forest Regressor, achieved an R2 score of 0.648, demonstrating a strong ability to predict funding levels from complex and diverse inputs. This model notably outperformed others by effectively handling outliers and leveraging important features like total patients, operation hours, and uninsured ratios, which were pivotal in improving the prediction accuracy. The insights derived from this analysis are provide a data-driven foundation for decision-making that could inform strategic planning fo health organizations interested in applying for Health Center Program funding. The final report includes detailed evaluations of model performance, feature importance analyses, and residual examinations, all of which underscore the robustness and reliability of the predictive models developed.
 
 ## Repo Organization
+```
 ├── LICENSE
 ├── README.md          <- The top-level README for developers using this project.
 ├── data
@@ -35,3 +36,4 @@ This project presents the culmination of an extensive data analysis and modeling
 │                      
 ├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
 │                         generated with `pip freeze > requirements.txt`
+```
