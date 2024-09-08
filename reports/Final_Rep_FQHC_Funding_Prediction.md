@@ -126,6 +126,8 @@ It should be noted that the pseudo R-squared values (which demonstrate the amoun
 
 ---
 ## Pre-Processing
+**Notebook Link:**
+* [Pre-Processing](https://github.com/dezertdweller/capstone-project-fqhc-model/blob/main/notebooks/pre-processing.ipynb)
 
 During preprocessing, identifier columns that were not required for analysis, such as `BHMISID` and `HealthCenterName`, were removed. The `HealthCenterState` feature was encoded using frequency encoding to reflect the potential influence of state population sizes on funding allocations. This approach ensures that the categorical data can be appropriately used in distance-based modeling techniques. I also removed the features I created that resulted in SDOH bins from my statistical testing during EDA.
 
@@ -141,6 +143,9 @@ The final step involved integrating the scaled numerical data with the encoded c
 
 ---
 ## Modeling and Model Evaluation
+**Notebook Link:**
+* [Modeling](https://github.com/dezertdweller/capstone-project-fqhc-model/blob/main/notebooks/modeling.ipynb)
+
 For each train-test split, I tested 2 different models Linear Regression and Random Forest Regressor. I also conducted PCA on the four different train-test splits and incorporated the PCA columns into the datasets for modeling. 
 
 I created an empty dataframe to keep track of model scores, including R<sup>2</sup>, Mean Absolute Error, and Root Mean Squared Error. I also used cross validation for each model and calcuated the mean scores for each of the earlier mentioned metrics. 
