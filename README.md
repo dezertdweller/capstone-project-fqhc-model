@@ -95,23 +95,177 @@ The larger health centers become, the more diversified their revenue streams app
 
 
 **SDOH Proportions**:
+Health centers are generally supposed to increase access to care and other critical services to a wide range of vulnerable populations, including, but not limited to, school children, the elderly, pregnant women and infants, immigrants, minority populations, the LGBTQ+ community, people with disabilities, military veterans, migrant and seasonal farm workers, people experiencing homelessness, residents of public housing and people with limited English proficiency. I looked at the distribution of each of these populations served across entities and how correlated each feature was to total HCP funding. I also created new columns to see if higher proportions of vulnerable populations was correlated with more funding. 
+
+The correlation matrices demonstrated that the number of racially diverse patients, the number of hispanic patients, and the number of other groups mentioned above are positively correlated with health center funding. Below is the matrix for race and ethnicity total numbers and proportions and how they related to funding.
+
+![race-ethnicity-corr-matrix](https://github.com/dezertdweller/capstone-project-fqhc-model/blob/main/assets/race-ethnicity-corr-matrix.png)
+
+
+Although most ratios didn't show a strong relationship with funding, they are essential for understanding equity and representation within health services. They might not directly influence funding amount but are critical for policy-making, resource allocation, and community engagement strategies. Data is not available about entities that were not selected for funding, however these ratios likely play a large role in scoring new entities based on the community impact they could have in their proposed service areas. Data from this analysis could serve as a good reference point for potential new agencies to compare their impact to funded entities in their state. 
+
+I conducted logistic statistical tests to test whether agencies serving higher proportions of each population type were more likely to receive more health center funding compared to agecies with lower proportions. For the groups that had a wider distribution raqnge, I split the data into quantiles (0-25th, 25th-50th, 50th-75th, 75th-100th). For data that had extremely skewed distributions (like mostly 0), I split the entities based on being above or below the median. 
+
+The following proportions showed a statistically significant difference in total HCP funding between quantile groups or binary groups:
+* Diverse race
+* Hispanic
+* Low income
+* Poverty
+* Medicaid 
+* Limited English proficiency
+* Private insurance
+* Uninsured
+* Medicare
+* Homeless
+* Veterans
+* Public housing
+* Migrants
+* School-based
+* Public insurance
+
+As the proportions increased, the amount of funding entities had also increased for most entities. The exception was entities serving higher than the median proportion of veterans receive statistically significant less funding compared to other entities. This could be due to having access to other types of special funding reserved for veteran-facing agencies, therefore these agencies are not prioritized for HCP funding.
+
+It should be noted that the pseudo R-squared values (which demonstrate the amount of variance explained by each of these measures) ranged from 0.5% to 3.9%, so none were particular strong predictors of total HCP funding. 
 
 ---
 ## Pre-Processing
 
+During preprocessing, identifier columns that were not required for analysis, such as `BHMISID` and `HealthCenterName`, were removed. The `HealthCenterState` feature was encoded using frequency encoding to reflect the potential influence of state population sizes on funding allocations. This approach ensures that the categorical data can be appropriately used in distance-based modeling techniques. I also removed the features I created that resulted in SDOH bins from my statistical testing during EDA.
+
+To address missing data, which constitutes approximately 43% of our dataset due to confidentiality choices by health centers, two strategies were adopted. First, columns with missing data were excluded from one version of the dataset while maintaining indicators for withheld operations and financial data. Secondly, another version of the dataset utilized `MICE` for imputing missing values, with both datasets prepared for comparative model performance evaluation.
+
+For scaling, numerical data was segregated from categorical data and processed using two scaling techniques. The `RobustScaler` method was employed to mitigate the influence of outliers by adjusting according to the median and interquartile ranges, suitable for data with extreme values. Additionally, the `PowerTransformer` method was used to normalize the data distribution, which enhances certain modeling techniques' effectiveness. Each scaling method was applied to prepare four distinct datasets for subsequent modeling steps.
+
+Categorical variables were transformed using dummy encoding for nominal features and integer encoding for binary or ordinal features. This process ensures that all data presented to the models are numerical and appropriately formatted for analysis.
+
+I also created a seperate train-test set for my target variable, `total_hc_funding` where I rounded each row to the nearest 500,000. I did this because knowing the exact amount of funding is not necessarily the goal. I wanted to see if rounding improved model performance. 
+
+The final step involved integrating the scaled numerical data with the encoded categorical data, creating a comprehensive dataset ready for detailed analysis and modeling. This methodical approach to data preparation ensures that the models developed are robust, reliable, and well-suited for predictive accuracy.
 
 ---
-## Modeling
+## Modeling and Model Evaluation
+For each train-test split, I tested 2 different models Linear Regression and Random Forest Regressor. I also conducted PCA on the four different train-test splits and incorporated the PCA columns into the datasets for modeling. 
 
+I created an empty dataframe to keep track of model scores, including R<sup>2</sup>, Mean Absolute Error, and Root Mean Squared Error. I also used cross validation for each model and calcuated the mean scores for each of the earlier mentioned metrics. 
+
+I sorted the model scores by Mean Absolute Error and compared the best 2 performing Linear Regression models and the best 2 Random Forest models. 
+
+**Summary of Top Model Performances**
+
+### Random Forest Models
+
+Reduced Robust Rounded Data:
+* Train RMSE: 630,797
+* Test RMSE: 1,585,783
+* Train MAE: 412,195
+* Test MAE: 1,110,124
+* Train R²: 0.948
+* Test R²: 0.648
+
+The model demonstrates a strong fit on the training data but shows some overfitting as indicated by the drop in R² from training to testing. The robust handling of outliers in the rounded dataset might have contributed to the better performance on the test set.
+
+Reduced Power Data:
+* Train RMSE: 768,621
+* Test RMSE: 1,589,978
+* Train MAE: 547,509
+* Test MAE: 1,110,669
+* Train R²: 0.923
+* Test R²: 0.646
+
+This model also fits well on the training data with a slightly worse performance on the test data compared to the rounded dataset model. It indicates a consistent performance across different preprocessing strategies.
+
+### Linear Regression Models
+
+Imputed Power Rounded Data:
+* Train RMSE: 1,687,938
+* Test RMSE: 1,642,445
+* Train MAE: 1,195,219
+* Test MAE: 1,213,404
+* Train R²: 0.628
+* Test R²: 0.623
+
+The linear regression model on rounded data with power transformation shows minimal overfitting. The lower R² values compared to RF models indicate less ability to explain the variance in the data.
+
+Imputed Power Data with PCA:
+* Train RMSE: 1,687,190
+* Test RMSE: 1,642,862
+* Train MAE: 1,194,952
+* Test MAE: 1,215,413
+* Train R²: 0.629
+* Test R²: 0.622
+
+This model slightly underperforms compared to its rounded counterpart but still maintains similar metrics, showcasing the effect of PCA on model performance.
+
+### Evaluation
+The Random Forest models outperform Linear Regression models in terms of RMSE and MAE, highlighting their effectiveness in handling complex patterns and outliers within the.
+
+The best random forest model only explains about 64% of the variance seen in the data. After some additional fine tuning, the best parameters for this model were as follows:
+- bootstrap: True
+- criterion: 'friedman_mse'
+- max_depth: None
+- max_features: 20
+- min_samples_leaf: 4
+- min_samples_split: 3
+- n_estimators: 200
+- n_jobs: -1
+
+The best forest model's features and their importance can be seen below:
+
+| Feature                      | Importance  |
+|------------------------------|-------------|
+| Total Patients               | 44.05%      |
+| Total Weekly Hours of Operation | 14.31%    |
+| Total Grant Funding          | 9.23%       |
+| Total Sites                  | 4.27%       |
+| Uninsured Ratio              | 3.59%       |
+| Diverse Race Proportion      | 2.33%       |
+| Total Other Revenue          | 1.99%       |
+| Zip Code Count               | 1.94%       |
+| Site City Count              | 1.74%       |
+| Funding MHC                  | 1.54%       |
+| Medicaid Ratio               | 1.39%       |
+| Private Insurance Ratio      | 1.25%       |
+| Hispanic Proportion          | 1.25%       |
+| FPL 100 Below Ratio          | 1.11%       |
+| Grants to Revenue Ratio      | 1.02%       |
+| State Frequency Encoding     | 0.96%       |
+| Funding HO                   | 0.95%       |
+| Medicare 18 Up Ratio         | 0.95%       |
+| Poverty Ratio                | 0.92%       |
+| Total 18 Up Ratio            | 0.88%       |
+
+Of the test set predictions, 50% were off by 800,000 or less. The average absolute residual is approximately 1.1 million, which indicates the average error magnitude between the predicted and actual funding. The smallest residual was off by 631. The worst prediction was off by 8,153,076. Below are boxplots demonstrating the distribution of absolute residuals between the test predictions and the training predictions. 
+
+![residuals-distribution](https://github.com/dezertdweller/capstone-project-fqhc-model/blob/main/assets/residuals-distribution.png)
 
 ---
-## Results
+## Concluding Thoughts
 
 
 ---
 ## Future Improvements
-Including other details about entities (type (gov, hospital, nonprofit), region, distance to US-Mex border, )
-Including state-level data (% uninusred, total population, % low-income)
+
+**State-Level Data**: I joined the residuals data with the original test data. I then grouped the results by state. Different states show different levels of prediction accuracy. For example, states like FL and GA show very high mean residuals and a broad standard deviation, suggesting potential model inconsistencies or unique state-related factors not captured by the model.
+
+Some states like MS have relatively lower mean residuals, which could be due to more consistent data, fewer outliers, or features that align well with the model’s strengths. In contrast, states like RI and TN show very high residuals, which might be worth investigating for data anomalies or specific regional characteristics affecting funding. States with the highest residuals or greatest variability might benefit from a more in-depth, state-specific analysis to tailor the model or address unique local factors. 
+
+A level of complexity not currently captures are state-related factors. For example future iterations of this project could include state-level demographic and fiscal data. For example, including things like the state uninsured rate, population, low income, and diversity as well as the amount of Medicaid/Medicare funding could further segment data into groups. 
+
+**Additional Entity Data**: Additionally, I found another dataset from HRSA that provides more details about each entitiy, including:
+* Detailed site categories (hospital, school, other clinic)
+* HRSA region
+* Location types (permanent, seasonal, mobile van)
+* Dates for when sites were added to scope
+* Organization type (Federal Tax Exempt of U.S. Government entity)
+* proximity to U.S.-Mexico border
+
+I am particularly interested about the dates field because this could inform how long agencies have received HCP funding for. Potentially the agencies that receive the most funding have had the funding for longer periods of time. 
+
+**Clustering Methods**: One of the challenges I experienced was not being able to find any major groupings between health centers. Another future improvement could be to conduct KMeans clustering as an unsuperivsed method to group the data. 
+
+**Classification**: One of my thoughts would be to turn this into a classification problem instead of a regression problem. The exact amount of funding is less important than gaging a general range of funding an entity could potentially receive. 
+
+**Other Experts**: Finally, I could meet with other industry experts, especially policy makers who are more knowledgable about Health Center Program funding and get their thoughts on the biggest factors that influence the funding an entity receives. 
 
 ---
 ## Credits & Thanks 🤗
